@@ -1,5 +1,7 @@
 package views
 
+import "kulturia/db"
+
 templ Template(title string, body templ.Component ) {
 	<html>
 		<head>
@@ -14,6 +16,20 @@ templ Template(title string, body templ.Component ) {
 	</html>
 }
 
-templ HelloContent(name string) {
-	<div>Hello, { name }</div>
+templ Index(entries []db.GetEntriesRow) {
+	<div>
+		<h1>Kulturia.co</h1>
+		<h2>Informasi memes dan kultur internet terkini</h2>
+		<div>
+			Terbaru:
+		</div>
+		<div>
+			for _, row := range entries {
+				<div>
+					<div>{ row.Entry.Name }</div>
+					<div>{ row.Entry.Origin }</div>
+				</div>
+			}
+		</div>
+	</div>
 }
