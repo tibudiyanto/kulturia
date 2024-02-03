@@ -35,6 +35,7 @@ func main() {
 
 	queries := db.New(dbx)
 
+	// Home page
 	router.GET("/", func(ctx *gin.Context) {
 		entries, err := queries.GetEntries(ctx)
 		page := views.Index(entries)
@@ -44,6 +45,43 @@ func main() {
 		}
 
 		template.Render(ctx, ctx.Writer)
+	})
+
+	router.GET("/add", func(ctx *gin.Context) {
+		page := views.Add("")
+		template := views.Template("Tambah", page)
+
+		template.Render(ctx, ctx.Writer)
+	})
+
+	type CreateForm struct {
+		Name   string `form:"name"`
+		Origin string `form:"origin"`
+		Desc   string `form:"desc"`
+	}
+
+	router.POST("/add", func(ctx *gin.Context) {
+		var entry CreateForm
+		if err := ctx.ShouldBind(&entry); err != nil {
+			fmt.Println("ERR", err)
+			return
+		}
+		_, err := queries.CreateEntry(ctx, db.CreateEntryParams{
+			Name:   entry.Name,
+			Origin: entry.Origin,
+			Desc:   entry.Desc,
+		})
+
+		if err != nil {
+			page := views.Add(err.Error())
+			page.Render(ctx, ctx.Writer)
+			return
+		}
+		ctx.Header("HX-Redirect", "/")
+		page := views.Add("Created")
+		page.Render(ctx, ctx.Writer)
+		return
+
 	})
 
 	router.Run() // listen and serve on 0.0.0.0:8080

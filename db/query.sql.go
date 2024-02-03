@@ -11,25 +11,19 @@ import (
 
 const createEntry = `-- name: CreateEntry :one
 INSERT INTO
-    entry (id, name, origin, desc)
+    entry (name, origin, desc)
 VALUES
-    (?, ?, ?, ?) RETURNING id, name, origin, "desc"
+    (?, ?, ?) RETURNING id, name, origin, "desc"
 `
 
 type CreateEntryParams struct {
-	ID     int64
 	Name   string
 	Origin string
 	Desc   string
 }
 
 func (q *Queries) CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error) {
-	row := q.db.QueryRowContext(ctx, createEntry,
-		arg.ID,
-		arg.Name,
-		arg.Origin,
-		arg.Desc,
-	)
+	row := q.db.QueryRowContext(ctx, createEntry, arg.Name, arg.Origin, arg.Desc)
 	var i Entry
 	err := row.Scan(
 		&i.ID,

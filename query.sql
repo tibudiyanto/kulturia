@@ -18,6 +18,6 @@ ORDER BY
 
 -- name: CreateEntry :one
 INSERT INTO
-    entry (id, name, origin, desc)
+    entry (name, origin, desc)
 VALUES
-    (?, ?, ?, ?) RETURNING *;
+    (?, ?, ?) RETURNING *;

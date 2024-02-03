@@ -7,29 +7,56 @@ templ Template(title string, body templ.Component ) {
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<script src="https://cdn.tailwindcss.com"></script>
+			<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 			<title>{ title } - Kulturia</title>
 		</head>
-		<body>
+		<body class="mx-auto px-4 sm:max-w-2xl lg:max-w-4xl">
+			@nav()
 			@body
 		</body>
 	</html>
 }
 
+templ nav() {
+	<div>
+		<a href="/">kulturia.co</a>
+	</div>
+}
+
 templ Index(entries []db.GetEntriesRow) {
 	<div>
-		<h1>Kulturia.co</h1>
-		<h2>Informasi memes dan kultur internet terkini</h2>
-		<div>
-			Terbaru:
+		<h2>memes dan kultur internet</h2>
+		<div class="flex flex-row justify-between">
+			<div>
+				terbaru:
+			</div>
+			<a class="border-solid border-2 border-black" href="/add">Tambah</a>
 		</div>
-		<div>
+		<div class="grid grid-cols-4 gap-2 mt-2">
 			for _, row := range entries {
 				<div>
+					<img src="https://cdn.idntimes.com/content-images/post/20230228/1-d2fac4df4f53a9bd939d2699bce24f15.jpg"/>
 					<div>{ row.Entry.Name }</div>
 					<div>{ row.Entry.Origin }</div>
 				</div>
 			}
 		</div>
+	</div>
+}
+
+templ Add(msg string) {
+	<div class="add-entry">
+		<h2>Add meme</h2>
+		<div>{ msg }</div>
+		<form hx-target=".add-entry" hx-post="/add" class="flex flex-col">
+			<label>Nama:</label>
+			<input name="name" type="input" class="border-solid border-2 border-black rounded"/>
+			<label>Cerita asal:</label>
+			<input name="origin" type="input" class="border-solid border-2 border-black rounded"/>
+			<label>Deskripsi:</label>
+			<input name="desc" type="input" class="border-solid border-2 border-black rounded"/>
+			<button type="submit">Tambah</button>
+		</form>
 	</div>
 }
