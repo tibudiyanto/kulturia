@@ -25,3 +25,4 @@ kulturia
 tmp
 
 *.sqlite3
+.env

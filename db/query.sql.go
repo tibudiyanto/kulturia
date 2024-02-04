@@ -7,7 +7,27 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
+
+const createAsset = `-- name: CreateAsset :one
+INSERT INTO
+    asset (entry_id, "location")
+VALUES
+    (?, ?) RETURNING id, entry_id, location
+`
+
+type CreateAssetParams struct {
+	EntryID  sql.NullInt64
+	Location sql.NullString
+}
+
+func (q *Queries) CreateAsset(ctx context.Context, arg CreateAssetParams) (Asset, error) {
+	row := q.db.QueryRowContext(ctx, createAsset, arg.EntryID, arg.Location)
+	var i Asset
+	err := row.Scan(&i.ID, &i.EntryID, &i.Location)
+	return i, err
+}
 
 const createEntry = `-- name: CreateEntry :one
 INSERT INTO
@@ -36,15 +56,18 @@ func (q *Queries) CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry
 
 const getEntries = `-- name: GetEntries :many
 SELECT
-    entry.id, entry.name, entry.origin, entry."desc"
+    entry.id, entry.name, entry.origin, entry."desc",
+    a.id, a.entry_id, a.location
 FROM
     entry
+    JOIN asset a on a.entry_id = entry.id
 ORDER BY
-    id
+    entry.id
 `
 
 type GetEntriesRow struct {
 	Entry Entry
+	Asset Asset
 }
 
 func (q *Queries) GetEntries(ctx context.Context) ([]GetEntriesRow, error) {
@@ -61,6 +84,9 @@ func (q *Queries) GetEntries(ctx context.Context) ([]GetEntriesRow, error) {
 			&i.Entry.Name,
 			&i.Entry.Origin,
 			&i.Entry.Desc,
+			&i.Asset.ID,
+			&i.Asset.EntryID,
+			&i.Asset.Location,
 		); err != nil {
 			return nil, err
 		}

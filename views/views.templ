@@ -36,7 +36,7 @@ templ Index(entries []db.GetEntriesRow) {
 		<div class="grid grid-cols-4 gap-2 mt-2">
 			for _, row := range entries {
 				<div>
-					<img src="https://cdn.idntimes.com/content-images/post/20230228/1-d2fac4df4f53a9bd939d2699bce24f15.jpg"/>
+					<img src={ row.Asset.Location.String }/>
 					<div>{ row.Entry.Name }</div>
 					<div>{ row.Entry.Origin }</div>
 				</div>
@@ -49,13 +49,15 @@ templ Add(msg string) {
 	<div class="add-entry">
 		<h2>Add meme</h2>
 		<div>{ msg }</div>
-		<form hx-target=".add-entry" hx-post="/add" class="flex flex-col">
+		<form hx-target=".add-entry" hx-post="/add" class="flex flex-col" hx-encoding="multipart/form-data">
 			<label>Nama:</label>
 			<input name="name" type="input" class="border-solid border-2 border-black rounded"/>
 			<label>Cerita asal:</label>
-			<input name="origin" type="input" class="border-solid border-2 border-black rounded"/>
+			<textarea name="origin" type="input" class="border-solid border-2 border-black rounded"></textarea>
 			<label>Deskripsi:</label>
-			<input name="desc" type="input" class="border-solid border-2 border-black rounded"/>
+			<textarea name="desc" type="input" class="border-solid border-2 border-black rounded"></textarea>
+			<label>Asset:</label>
+			<input name="asset" type="file" accept=".jpeg,.jpg"/>
 			<button type="submit">Tambah</button>
 		</form>
 	</div>

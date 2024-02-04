@@ -4,7 +4,15 @@
 
 package db
 
-import ()
+import (
+	"database/sql"
+)
+
+type Asset struct {
+	ID       int64
+	EntryID  sql.NullInt64
+	Location sql.NullString
+}
 
 type Entry struct {
 	ID     int64

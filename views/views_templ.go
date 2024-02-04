@@ -103,7 +103,15 @@ func Index(entries []db.GetEntriesRow) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, row := range entries {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><img src=\"https://cdn.idntimes.com/content-images/post/20230228/1-d2fac4df4f53a9bd939d2699bce24f15.jpg\"><div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><img src=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(row.Asset.Location.String))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -171,7 +179,7 @@ func Add(msg string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><form hx-target=\".add-entry\" hx-post=\"/add\" class=\"flex flex-col\"><label>Nama:</label> <input name=\"name\" type=\"input\" class=\"border-solid border-2 border-black rounded\"> <label>Cerita asal:</label> <input name=\"origin\" type=\"input\" class=\"border-solid border-2 border-black rounded\"> <label>Deskripsi:</label> <input name=\"desc\" type=\"input\" class=\"border-solid border-2 border-black rounded\"> <button type=\"submit\">Tambah</button></form></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><form hx-target=\".add-entry\" hx-post=\"/add\" class=\"flex flex-col\" hx-encoding=\"multipart/form-data\"><label>Nama:</label> <input name=\"name\" type=\"input\" class=\"border-solid border-2 border-black rounded\"> <label>Cerita asal:</label> <textarea name=\"origin\" type=\"input\" class=\"border-solid border-2 border-black rounded\"></textarea> <label>Deskripsi:</label> <textarea name=\"desc\" type=\"input\" class=\"border-solid border-2 border-black rounded\"></textarea> <label>Asset:</label> <input name=\"asset\" type=\"file\" accept=\".jpeg,.jpg\"> <button type=\"submit\">Tambah</button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
