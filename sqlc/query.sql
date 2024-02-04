@@ -1,10 +1,12 @@
 -- name: GetEntry :one
 SELECT
-    sqlc.embed(entry)
+    sqlc.embed(entry),
+    sqlc.embed(a)
 FROM
     entry
+    JOIN asset a on a.entry_id = entry.id
 WHERE
-    id = ?
+    entry.id = ?
 LIMIT
     1;
 

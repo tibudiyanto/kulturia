@@ -103,17 +103,20 @@ func (q *Queries) GetEntries(ctx context.Context) ([]GetEntriesRow, error) {
 
 const getEntry = `-- name: GetEntry :one
 SELECT
-    entry.id, entry.name, entry.origin, entry."desc"
+    entry.id, entry.name, entry.origin, entry."desc",
+    a.id, a.entry_id, a.location
 FROM
     entry
+    JOIN asset a on a.entry_id = entry.id
 WHERE
-    id = ?
+    entry.id = ?
 LIMIT
     1
 `
 
 type GetEntryRow struct {
 	Entry Entry
+	Asset Asset
 }
 
 func (q *Queries) GetEntry(ctx context.Context, id int64) (GetEntryRow, error) {
@@ -124,6 +127,9 @@ func (q *Queries) GetEntry(ctx context.Context, id int64) (GetEntryRow, error) {
 		&i.Entry.Name,
 		&i.Entry.Origin,
 		&i.Entry.Desc,
+		&i.Asset.ID,
+		&i.Asset.EntryID,
+		&i.Asset.Location,
 	)
 	return i, err
 }

@@ -81,6 +81,29 @@ func main() {
 		template.Render(ctx, ctx.Writer)
 	})
 
+	type MemeURI struct {
+		ID int64 `uri:"id" binding:"required"`
+	}
+
+	router.GET("/:id", func(ctx *gin.Context) {
+		var uri MemeURI
+		if err := ctx.ShouldBindUri(&uri); err != nil {
+			fmt.Println("OI", err)
+		}
+
+		entry, err := queries.GetEntry(ctx, uri.ID)
+
+		if err != nil {
+			// 404
+			ctx.Redirect(404, "404")
+		}
+
+		page := views.Show(entry)
+		template := views.Template("Tambah", page)
+
+		template.Render(ctx, ctx.Writer)
+	})
+
 	router.GET("/add", func(ctx *gin.Context) {
 		page := views.Add("")
 		template := views.Template("Tambah", page)
@@ -106,6 +129,10 @@ func main() {
 			Origin: entry.Origin,
 			Desc:   entry.Desc,
 		})
+
+		if err != nil {
+			panic(err)
+		}
 
 		file, err := ctx.FormFile("asset")
 		if err != nil {

@@ -1,6 +1,7 @@
 package views
 
 import "kulturia/db"
+import "fmt"
 
 templ Template(title string, body templ.Component ) {
 	<html>
@@ -37,11 +38,11 @@ templ Index(entries []db.GetEntriesRow) {
 		</div>
 		<div class="grid grid-cols-4 gap-2 mt-2">
 			for _, row := range entries {
-				<div>
+				<a href={ templ.URL(fmt.Sprintf("%d", row.Entry.ID)) }>
 					<img src={ row.Asset.Location.String }/>
 					<div>{ row.Entry.Name }</div>
 					<div>{ row.Entry.Origin }</div>
-				</div>
+				</a>
 			}
 		</div>
 	</div>
@@ -82,5 +83,21 @@ templ Add(msg string) {
 			);
 	
 	</script>
+	</div>
+}
+
+func markdownToHTML(template string) string {
+	// convert to html
+	return template
+}
+
+templ Show(row db.GetEntryRow) {
+	<div>
+		<img src={ row.Asset.Location.String }/>
+		<h1>{ row.Entry.Name }</h1>
+		<h2>Origin:</h2>
+		<div>{ markdownToHTML(row.Entry.Origin) }</div>
+		<h2>Desc</h2>
+		<div>{ markdownToHTML(row.Entry.Desc) }</div>
 	</div>
 }
