@@ -1,7 +1,11 @@
 package views
 
-import "kulturia/db"
-import "fmt"
+import (
+	"kulturia/db"
+	"fmt"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/gomarkdown/markdown"
+)
 
 templ Template(title string, body templ.Component ) {
 	<html>
@@ -61,13 +65,13 @@ templ Add(msg string) {
 			<textarea name="origin" id="origin" type="input" class="block border-solid border-2 border-black rounded"></textarea>
 			<label class="block">Penggunaan:</label>
 			<textarea name="desc" id="desc" type="input" class="block border-solid border-2 border-black rounded"></textarea>
-			<button class="block" type="submit">Tambah</button>
+			<button class="block" type="submit" hx-disabled-elt="this">Tambah</button>
 		</form>
 		<script>
 			var mdeOrigin = new EasyMDE(
 				{ 
 					element: document.getElementById('origin'),
-					forcesync: true,
+					forceSync: true,
 					hideIcons: ['image'],
 					maxHeight: '400px'
 				}
@@ -76,7 +80,7 @@ templ Add(msg string) {
 			var mdeDesc = new EasyMDE(
 				{ 
 					element: document.getElementById('desc'),
-					forcesync: true,
+					forceSync: true,
 					hideIcons: ['image'],
 					maxHeight: '400px'
 				}
@@ -88,7 +92,9 @@ templ Add(msg string) {
 
 func markdownToHTML(template string) string {
 	// convert to html
-	return template
+	maybeUnsafeHTML := markdown.ToHTML([]byte(template), nil, nil)
+	html := bluemonday.UGCPolicy().SanitizeBytes(maybeUnsafeHTML)
+	return string(html)
 }
 
 templ Show(row db.GetEntryRow) {
@@ -96,8 +102,12 @@ templ Show(row db.GetEntryRow) {
 		<img src={ row.Asset.Location.String }/>
 		<h1>{ row.Entry.Name }</h1>
 		<h2>Origin:</h2>
-		<div>{ markdownToHTML(row.Entry.Origin) }</div>
+		<div class="prose">
+			@templ.Raw(markdownToHTML(row.Entry.Origin))
+		</div>
 		<h2>Desc</h2>
-		<div>{ markdownToHTML(row.Entry.Desc) }</div>
+		<div class="prose">
+			@templ.Raw(markdownToHTML(row.Entry.Desc))
+		</div>
 	</div>
 }
