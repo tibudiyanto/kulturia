@@ -9,9 +9,11 @@ templ Template(title string, body templ.Component ) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
 			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+			<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css"/>
+			<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 			<title>{ title } - Kulturia</title>
 		</head>
-		<body class="mx-auto px-4 sm:max-w-2xl lg:max-w-4xl">
+		<body hx-boost="true" class="mx-auto px-4 sm:max-w-2xl lg:max-w-4xl">
 			@nav()
 			@body
 		</body>
@@ -49,16 +51,36 @@ templ Add(msg string) {
 	<div class="add-entry">
 		<h2>Add meme</h2>
 		<div>{ msg }</div>
-		<form hx-target=".add-entry" hx-post="/add" class="flex flex-col" hx-encoding="multipart/form-data">
-			<label>Nama:</label>
-			<input name="name" type="input" class="border-solid border-2 border-black rounded"/>
-			<label>Cerita asal:</label>
-			<textarea name="origin" type="input" class="border-solid border-2 border-black rounded"></textarea>
-			<label>Deskripsi:</label>
-			<textarea name="desc" type="input" class="border-solid border-2 border-black rounded"></textarea>
-			<label>Asset:</label>
-			<input name="asset" type="file" accept=".jpeg,.jpg"/>
-			<button type="submit">Tambah</button>
+		<form hx-target=".add-entry" hx-post="/add" hx-encoding="multipart/form-data">
+			<label class="block">Asset:</label>
+			<input name="asset" type="file" class="block" accept=".jpeg,.jpg"/>
+			<label class="block">Nama:</label>
+			<input name="name" type="input" class="block border-solid border-2 border-black rounded"/>
+			<label class="block">Cerita asal:</label>
+			<textarea name="origin" id="origin" type="input" class="block border-solid border-2 border-black rounded"></textarea>
+			<label class="block">Penggunaan:</label>
+			<textarea name="desc" id="desc" type="input" class="block border-solid border-2 border-black rounded"></textarea>
+			<button class="block" type="submit">Tambah</button>
 		</form>
+		<script>
+			var mdeOrigin = new EasyMDE(
+				{ 
+					element: document.getElementById('origin'),
+					forcesync: true,
+					hideIcons: ['image'],
+					maxHeight: '400px'
+				}
+			);
+
+			var mdeDesc = new EasyMDE(
+				{ 
+					element: document.getElementById('desc'),
+					forcesync: true,
+					hideIcons: ['image'],
+					maxHeight: '400px'
+				}
+			);
+	
+	</script>
 	</div>
 }

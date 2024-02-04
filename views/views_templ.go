@@ -25,20 +25,20 @@ func Template(title string, body templ.Component) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><script src=\"https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp\"></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><title>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><script src=\"https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp\"></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"stylesheet\" href=\"https://unpkg.com/easymde/dist/easymde.min.css\"><script src=\"https://unpkg.com/easymde/dist/easymde.min.js\"></script><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 11, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 13, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" - Kulturia</title></head><body class=\"mx-auto px-4 sm:max-w-2xl lg:max-w-4xl\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" - Kulturia</title></head><body hx-boost=\"true\" class=\"mx-auto px-4 sm:max-w-2xl lg:max-w-4xl\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -118,7 +118,7 @@ func Index(entries []db.GetEntriesRow) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(row.Entry.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 39, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 41, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -131,7 +131,7 @@ func Index(entries []db.GetEntriesRow) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(row.Entry.Origin)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 40, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 42, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -173,13 +173,13 @@ func Add(msg string) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 50, Col: 12}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/views.templ`, Line: 52, Col: 12}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><form hx-target=\".add-entry\" hx-post=\"/add\" class=\"flex flex-col\" hx-encoding=\"multipart/form-data\"><label>Nama:</label> <input name=\"name\" type=\"input\" class=\"border-solid border-2 border-black rounded\"> <label>Cerita asal:</label> <textarea name=\"origin\" type=\"input\" class=\"border-solid border-2 border-black rounded\"></textarea> <label>Deskripsi:</label> <textarea name=\"desc\" type=\"input\" class=\"border-solid border-2 border-black rounded\"></textarea> <label>Asset:</label> <input name=\"asset\" type=\"file\" accept=\".jpeg,.jpg\"> <button type=\"submit\">Tambah</button></form></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><form hx-target=\".add-entry\" hx-post=\"/add\" hx-encoding=\"multipart/form-data\"><label class=\"block\">Asset:</label> <input name=\"asset\" type=\"file\" class=\"block\" accept=\".jpeg,.jpg\"> <label class=\"block\">Nama:</label> <input name=\"name\" type=\"input\" class=\"block border-solid border-2 border-black rounded\"> <label class=\"block\">Cerita asal:</label> <textarea name=\"origin\" id=\"origin\" type=\"input\" class=\"block border-solid border-2 border-black rounded\"></textarea> <label class=\"block\">Penggunaan:</label> <textarea name=\"desc\" id=\"desc\" type=\"input\" class=\"block border-solid border-2 border-black rounded\"></textarea> <button class=\"block\" type=\"submit\">Tambah</button></form><script>\n\t\t\tvar mdeOrigin = new EasyMDE(\n\t\t\t\t{ \n\t\t\t\t\telement: document.getElementById('origin'),\n\t\t\t\t\tforcesync: true,\n\t\t\t\t\thideIcons: ['image'],\n\t\t\t\t\tmaxHeight: '400px'\n\t\t\t\t}\n\t\t\t);\n\n\t\t\tvar mdeDesc = new EasyMDE(\n\t\t\t\t{ \n\t\t\t\t\telement: document.getElementById('desc'),\n\t\t\t\t\tforcesync: true,\n\t\t\t\t\thideIcons: ['image'],\n\t\t\t\t\tmaxHeight: '400px'\n\t\t\t\t}\n\t\t\t);\n\t\n\t</script></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
